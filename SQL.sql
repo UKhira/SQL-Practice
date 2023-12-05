@@ -64,8 +64,10 @@ SELECT dloc, dname FROM Dept;
 
 -- Arithmatic Expressions
 
+-- Without brackets: * takes precedence over +
 SELECT lname, salary, salary + 300 FROM Emp;
 
+-- With brackets: override * precedence and make + take precedence
 SELECT lname, salary, 12 * salary + 200 FROM Emp;
 
 SELECT lname, salary, 12 * (salary + 200) FROM Emp;
@@ -73,12 +75,16 @@ SELECT lname, salary, 12 * (salary + 200) FROM Emp;
 
 -- Null values
 
+-- A null value is an unavailable, unassigned, unknown or inapplicable value.oA null value is not the same as zero or a blank value.
 SELECT lname, salary, commPct FROM Emp;
 
+-- An arithmetic expression containing a null value will return a null value.
 SELECT lname, salary,12 * salary * commPct FROM Emp; 
 
 
 --  Column Aliases
+
+-- A column alias renames a column heading.oIt follows the AS keyword and uses " " to display the exact same label.
 
 --  This Query will replace existing column names to names in " "
 SELECT 
@@ -87,6 +93,7 @@ salary AS "Monthly Salary",
 commPct AS "Commission"
 FROM Emp;
 
+-- It is useful as part of calculations
 SELECT 
 lname AS "Surname",
 12 * salary AS "Yearly Salary",
@@ -96,53 +103,73 @@ FROM Emp;
 
 --  Concatanation
 
+-- Concatenate columns: use CONCAT function.
 SELECT CONCAT (fname,lname) As "Full Name"
 FROM Emp;
 
+-- Concatenate and introduce a blank space.
 SELECT CONCAT (fname, ' ', lname) AS "Full Name"
 FROM Emp;
 
+-- Concatenate and introduce a string.
 SELECT CONCAT (fname, ' ', lname, ' is a ', position) AS "Full Name and Job"
 FROM Emp; 
 
 
--- Duplicate Rows
+-- Remove Duplicate Rows
 SELECT DISTINCT deptNo FROM Emp;
 
 
 --	Restricting rows with WHERE clause
+
+-- No quotes required in WHERE clause with numbers
 SELECT empId, lname, position, hiredate, deptno
 FROM Emp
 WHERE deptno = 10;
 
+-- Quotes required in WHERE clause with strings.
 SELECT empId, lname, position, hiredate, deptno
 FROM Emp
 WHERE position = "Database Architect";
 
+-- Quotes required in WHERE clause with dates.
 SELECT empId, lname, position, hiredate, deptno
 FROM Emp
 WHERE hiredate = '2021-03-01';
 
 
 -- Comparing One or Two Values with BETWEEN ... AND
+
+-- Comparison operator in WHERE clause.
 SELECT empId, lname, position, salary, deptNo
 FROM Emp
 WHERE salary >= 4500;
 
+-- BETWEEN ... AND operator (by default boundaries values are included!).
 SELECT empId, lname, position, salary, deptNo
 FROM Emp
 WHERE salary BETWEEN 4000 AND 4800;
 
+-- Two comparison operators with the AND logical operator.
 SELECT empId, lname, position, salary, deptNo
 FROM Emp
 WHERE salary > 4000 AND salary < 4800;
 
 
 -- Comparing a list of values with IN
+
+-- Using IN operator to see if a value match any of the values in a list.
 SELECT empId, lname, position, hiredate, deptno
 FROM Emp
 WHERE deptNo IN (10, 30, 40);
 
+-- Three = comparison operators with OR logical operator to do the same.
 SELECT empId, lname, position, hiredate, deptNo
 FROM Emp
 WHERE deptNo = 10 OR deptNo = 30 OR deptNo = 40;
+
+-- Combining NOT and IN operator to get the opposite
+SELECT empId, lname,position, hiredate, deptNo
+FROM Emp
+WHERE deptNo NOT IN (10, 30, 40);
+
