@@ -173,3 +173,59 @@ SELECT empId, lname,position, hiredate, deptNo
 FROM Emp
 WHERE deptNo NOT IN (10, 30, 40);
 
+
+-- Matching character patterns with LIKE
+
+-- Finding words starts with specific letter
+SELECT empId, lname, position, hiredate, deptNo
+FROM Emp
+WHERE lname LIKE 'M%';
+
+-- Finding words that contain a specific letter anywhere
+SELECT empId, lname, position, hiredate, deptNo
+FROM Emp
+WHERE lname LIKE'%o%';
+
+-- Finding words that contain a specific letter in a specific position
+
+-- This query will output all "_o_ _..." Words (Doggs, Bog,...)
+SELECT empId, lname, position, hiredate, deptNo
+FROM Emp
+WHERE lname LIKE '_o%';
+
+
+-- Finding NULL values with IS NULL
+
+-- Retrieving records for which one attribute has no values.
+SELECT deptNo, dname, dloc, createDate
+FROM Dept
+WHERE createDate IS NULL;
+
+-- Retrieving records for which one attribute has values.
+SELECT empId, lname, position, commPct, deptNo
+FROM Emp
+WHERE commPct IS NOT NULL;
+
+-- Retrieving children records with no values in their FKs.
+SELECT empId, lname, position, salary, deptNo
+FROM Emp
+WHERE deptNo IS NULL;
+
+
+
+-- Using Logical Operators
+
+-- AND Operator
+SELECT empId, lname, position, salary, deptNo 
+FROM Emp
+WHERE position LIKE '%Database%' AND salary > 4300;
+
+-- OR Operator
+SELECT empId, lname, position, salary, deptNo
+FROM Emp
+WHERE position LIKE '%Database' OR salary > 4300;
+
+-- AND and NOT Operators
+SELECT empId, lname, position, salary, deptNo
+FROM Emp
+WHERE deptNo NOT IN (10, 30) AND salary > 4300;
