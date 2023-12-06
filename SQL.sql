@@ -229,3 +229,38 @@ WHERE position LIKE '%Database' OR salary > 4300;
 SELECT empId, lname, position, salary, deptNo
 FROM Emp
 WHERE deptNo NOT IN (10, 30) AND salary > 4300;
+
+
+-- Precedence
+
+-- Without brackets: AND takes precedence over OR.
+SELECT empId, lname, position, salary, deptNo
+FROM Emp
+WHERE position LIKE '%Database%'
+OR position LIKE '%Developer%'
+AND salary > 4400;
+
+-- With brackets: override AND precedence and make OR take precedence.
+SELECT empId, lname, position, salary, deptNo
+FROM Emp
+WHERE (position LIKE '%Database%'
+OR position LIKE '%Developer')
+AND salary > 4400;
+
+
+-- Sort DATA with ORDER BY
+
+-- Sorting in ascending order: the use ASC keyword is optional.
+SELECT empId, lname, hiredate, salary
+FROM Emp
+ORDER BY hiredate;
+
+-- Sorting in descending order and using an alias.
+SELECT empId, lname, hiredate, salary * 12 AS AnnSal
+FROM Emp
+ORDER BY AnnSal DESC;
+
+-- Sorting by multiple columns
+SELECT empId, lname, hiredate, salary, deptNo
+FROM Emp
+ORDER BY deptNo, salary DESC;
