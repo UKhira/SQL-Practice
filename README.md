@@ -1,2 +1,2 @@
 # SQL-Practice
-SQL Practice
+CREATE DATABASE IF NOT EXISTS SQL Practice;
