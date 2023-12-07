@@ -87,3 +87,66 @@ VALUES
 (762, 'Move Laptop', 'M Laptop 3223', '2021-05-08', 1678.00, NULL, 103);
 
 -- Join statement using ON clause (without prefixes)
+SELECT dName, dLoc, lName, position, email
+FROM Dept JOIN Emp
+ON Dept.deptNo = Emp. deptNo;
+
+-- Join statement using ON clause (with prefixes)
+
+-- With prefixes (preferred).
+SELECT Dept.dName, Dept.dLoc, Emp.lName, Emp.position, Emp.email
+FROM Dept JOIN Emp
+ON Dept.deptNo = Emp.deptNo;
+
+-- Prefix required if retrieving the Parent’s PK/Child’s FK as ambiguous.
+SELECT Dept.deptNo, Dept.dName, Emp.lName, Emp.email
+FROM Dept JOIN Emp
+ON Dept.deptNo = Emp.deptNo;
+
+-- Join statement using ON clause (with prefixes & aliases)
+SELECT D.dName, D.dLoc, E.lName, E.email
+FROM Dept D JOIN Emp E
+ON D.deptNo = E.deptNo;
+
+-- Join statement using WHERE clause (with prefixes & aliases)
+SELECT D.dName, D.dLoc, E.lName, E.email
+FROM Dept D, Emp E
+WHERE D.deptNo = E.deptNo;
+
+-- Join statement using ON clause with additional condition
+SELECT D.dName, D.dLoc, E.lName, E.email
+FROM Dept D JOIN Emp E
+ON D.deptNo = E.deptNo
+AND D.dName LIKE '%Database%';
+
+-- Join condition using WHERE clause with additional condition
+SELECT D.dName, D.dLoc, E.lName, E.email
+FROM Dept D JOIN Emp E
+WHERE D.deptNo = E.deptNo
+AND D.dName LIKE '%Database%';
+
+-- Join condition using ON clause with 2 additional conditions
+SELECT D.dName, D.dLoc, E.lName, E.email
+FROM Dept D JOIN Emp E
+ON D.deptNo = E.deptNo
+AND (D.dName LIKE '%Database%'
+OR E.salary < 4700);
+
+-- Self-Join statement
+SELECT M.empId AS mangerId, M.lName AS managerName, M.fName AS managerFName, E.empId, E.lName, E.fName
+FROM Emp M JOIN Emp E
+ON M.empId = E.mgrId;
+
+-- Three-way join statement
+SELECT D.dName , D.dLoc, D.createDate, 
+E.lName, E.fName, E.email,
+DV.deviceMake, DV.deviceModel, DV.deviceFaults
+FROM Dept D 
+JOIN Emp E ON D.deptNo = E.deptNo
+JOIN Device DV ON E.empId = DV.empId; 
+
+-- Inner-Join statement
+SELECT D.dName, D.dLoc, E.lName, E.email
+FROM Dept D JOIN Emp E
+ON D.deptNo = E.deptNo;
+
