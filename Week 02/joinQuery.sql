@@ -150,3 +150,23 @@ SELECT D.dName, D.dLoc, E.lName, E.email
 FROM Dept D JOIN Emp E
 ON D.deptNo = E.deptNo;
 
+-- Left-Outer Join
+SELECT D.dName, D.dLoc, E.lName, E.email
+FROM Dept D LEFT OUTER JOIN Emp E
+ON D.deptNo = E.deptNo;
+
+-- Right-Outer Join condition using ON clause
+SELECT D.dName, D.dLoc, E.lName, E.email
+FROM Dept D RIGHT OUTER JOIN Emp E
+ON D.deptNo = E.deptNo;
+
+-- Full-Outer Join
+
+-- Left-Outer Join with UNION
+SELECT D.dName, D.dLoc, E.lName, E.email
+FROM Dept D LEFT OUTER JOIN Emp E
+ON D.deptNo = E.deptNo
+UNION
+SELECT D.dName, d.dLoc, E.lName, E.email
+FROM Dept D RIGHT OUTER JOIN Emp E
+ON D.deptNo = E.deptNo;
