@@ -1,22 +1,30 @@
--- SQL Script to create and populate tables for the MegaFirm case study
+CREATE DATABASE Megafirm; 
 
--- Drop the tables in case they already exist
-DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS departments;
+DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS locations;
 DROP TABLE IF EXISTS jobs;
 
--- Create the locations table
+-- Create locations Table
 CREATE TABLE locations
 (
-	location_id  	INTEGER,
-	street_address	VARCHAR(50) UNIQUE NOT NULL,
-	postal_code		VARCHAR(10) NOT NULL,
-	city			VARCHAR(50) NOT NULL,
-	state_province	VARCHAR(50) NOT NULL,
-	country			VARCHAR(50) NOT NULL,
-	CONSTRAINT 		l_lid_pk PRIMARY KEY (location_id)
+    location_id     INTEGER,
+    street_address  VARCHAR(50),
+    postal_code     INTEGER,
+    city            VARCHAR(10),
+    state_province  VARCHAR(10),
+    country         VARCHAR(10),
+    CONSTRAINT l_locId PRIMARY KEY (location_id)
 );
+
+-- Populate the locations table
+INSERT INTO 
+locations (location_id, street_address, postal_code, city, state_province, country)
+VALUES 
+(100, '2 Nice Road', 'N2 7TH', 'London', 'Greater London', 'UK'),
+(200, '23 Pretty Road', 'BS1 8FD', 'Bristol', 'Bristol County', 'UK'),
+(300, '26 Great Street', 'BN1 4BF', 'Brigthon', 'Sussex', 'UK'),
+(400, '143 Lovely Road', 'CB1 2NV', 'Cambridge', 'Cambridgeshire', 'UK');
 
 -- Create the jobs table
 CREATE TABLE jobs
@@ -28,6 +36,23 @@ CREATE TABLE jobs
 	CONSTRAINT 		j_jid_pk PRIMARY KEY (job_id)
 );
 
+-- Populate the jobs table
+INSERT INTO 
+jobs (job_id, job_title, min_salary, max_salary)
+VALUES
+(901, 'Managing Director', 75000, 125000),
+(902, 'Programmer', 35000, 80000),
+(903, 'Sales Rep', 25000, 45000),
+(904, 'Project Manager', 45000, 95000),
+(905, 'Marketing Manager', 37000, 68000),
+(906, 'Marketing Producer', 34000, 70000),
+(907, 'Operations Manager', 28000, 41000),
+(908, 'Sales Administrator', 38000, 65000),
+(909, 'Database Architect', 44000, 73000),
+(910, 'Operations Officer', 32000, 61000),
+(911, 'IT Tester', 38000, 55000),
+(912, 'Finance Director', 72000, 115000);
+
 -- Create the departments table
 CREATE TABLE departments
 (
@@ -38,6 +63,17 @@ CREATE TABLE departments
 	CONSTRAINT 		d_lid_fk FOREIGN KEY (location_id)
 	REFERENCES 		locations(location_id)
 );
+
+-- Populate the departments table
+INSERT INTO 
+departments (department_id, department_name, location_id)
+VALUES
+(10, 'IT', 100),
+(20, 'Operations', 200),
+(30, 'Sales', 300),
+(40, 'Marketing', 400),
+(50, 'Management', 100),
+(60, 'Security', 200);
 
 -- Create the employees table
 CREATE TABLE employees
@@ -61,43 +97,6 @@ CREATE TABLE employees
 	CONSTRAINT 		e_jid_fk FOREIGN KEY (job_id)
 	REFERENCES 		jobs(job_id)
 );
-
--- Populate the locations table
-INSERT INTO 
-locations (location_id, street_address, postal_code, city, state_province, country)
-VALUES 
-(100, '2 Nice Road', 'N2 7TH', 'London', 'Greater London', 'UK'),
-(200, '23 Pretty Road', 'BS1 8FD', 'Bristol', 'Bristol County', 'UK'),
-(300, '26 Great Street', 'BN1 4BF', 'Brigthon', 'Sussex', 'UK'),
-(400, '143 Lovely Road', 'CB1 2NV', 'Cambridge', 'Cambridgeshire', 'UK');
-
--- Populate the jobs table
-INSERT INTO 
-jobs (job_id, job_title, min_salary, max_salary)
-VALUES
-(901, 'Managing Director', 75000, 125000),
-(902, 'Programmer', 35000, 80000),
-(903, 'Sales Rep', 25000, 45000),
-(904, 'Project Manager', 45000, 95000),
-(905, 'Marketing Manager', 37000, 68000),
-(906, 'Marketing Producer', 34000, 70000),
-(907, 'Operations Manager', 28000, 41000),
-(908, 'Sales Administrator', 38000, 65000),
-(909, 'Database Architect', 44000, 73000),
-(910, 'Operations Officer', 32000, 61000),
-(911, 'IT Tester', 38000, 55000),
-(912, 'Finance Director', 72000, 115000);
-
--- Populate the departments table
-INSERT INTO 
-departments (department_id, department_name, location_id)
-VALUES
-(10, 'IT', 100),
-(20, 'Operations', 200),
-(30, 'Sales', 300),
-(40, 'Marketing', 400),
-(50, 'Management', 100),
-(60, 'Security', 200);
 
 -- Populate the employees table
 INSERT INTO 
@@ -130,5 +129,15 @@ VALUES
 (1024, 'Nikolai', 'Mikonov', 'nm@firm.com', '0207911124', '2020-11-02', NULL, NULL, NULL, NULL, NULL),
 (1025, 'Gino', 'Gondolini', 'gg@firm.com', '0207911125', '2020-11-02', NULL, NULL, NULL, NULL, NULL);
 
+/* Write a query that displays a list of department names alongside the cities and countries where 
+these departments are located, for all departments in Cambridge. */   
+SELECT D.department_name, L.city, L.country
+FROM departments D JOIN locations L
+ON D.location_id = L.location_id
+WHERE L.city = 'Cambridge';
 
 
+/* Display a list of countries, cities, department names alongside the full names and salaries of 
+the members of staff who work in those departments and cities. Do this for staff that were either 
+hired after 2 March 2015 or who earn less than £46000. Order your output by country, city, and 
+department name.*/
