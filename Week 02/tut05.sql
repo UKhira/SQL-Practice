@@ -129,6 +129,9 @@ VALUES
 (1024, 'Nikolai', 'Mikonov', 'nm@firm.com', '0207911124', '2020-11-02', NULL, NULL, NULL, NULL, NULL),
 (1025, 'Gino', 'Gondolini', 'gg@firm.com', '0207911125', '2020-11-02', NULL, NULL, NULL, NULL, NULL);
 
+
+-- Tutorial 05 Question 01
+
 /* Write a query that displays a list of department names alongside the cities and countries where 
 these departments are located, for all departments in Cambridge. */   
 SELECT D.department_name, L.city, L.country
@@ -136,8 +139,44 @@ FROM departments D JOIN locations L
 ON D.location_id = L.location_id
 WHERE L.city = 'Cambridge';
 
+-- Tutorial 05 Question 02
 
-/* Display a list of countries, cities, department names alongside the full names and salaries of 
+/* Write a query that displays a list of department names alongside the full names and salaries of the employees 
+who work in those departments, but only for the employees who earn more than 45K and for the departments whose 
+name start with the letter M. To avoid the issue of the capitalisation of the letter M, use UPPER to convert from 
+lower-case to upper-case */
+SELECT  D.department_name, CONCAT(E.first_name, " ", E.last_name) AS full_name, E.Salary
+FROM departments D JOIN employees E
+ON D.department_id = E.department_id
+WHERE E.salary > 45000.00 AND 
+UPPER(D.department_name) LIKE ('M%');
+
+
+-- Tutorial 05 Question 03
+
+/* Write a query that displays a list of countries, cities, department names alongside the full names and salaries of 
 the members of staff who work in those departments and cities. Do this for staff that were either 
 hired after 2 March 2015 or who earn less than £46000. Order your output by country, city, and 
 department name.*/
+SELECT L.country, L.city, D.department_name, CONCAT(E.first_name," ", E.last_name) AS full_name, E.salary
+FROM locations L JOIN departments D ON L.location_id =  D.location_id
+JOIN employees E ON D.department_id = E.department_id
+WHERE E.hire_date > '2015-03-02' OR E.salary < 46000.00
+ORDER BY L.country, L.city, D.department_name;
+
+
+-- Tutorial 05 Question 04
+
+/* Write a query that displays a list of departments alongside the full names, hire dates and salaries of the 
+employeeswho work in those departments but only for the employees whose surname starts with a P and those 
+employees whose surname starts with a S */
+SELECT D.department_name, CONCAT(E.first_name, " ", E.last_name) AS full_name, E.hire_date, E.salary
+FROM departments D JOIN employees E 
+ON D.department_id = E.department_id
+WHERE E.last_name LIKE 'P%' OR E.last_name LIKE 'S%';
+
+-- Tutorial 05 Question 05
+
+/* Write a query that displays a list of IDs, first names and surnames of the employees who manage other employees
+with the IDs, first names and surnames of the employees that they manage. Rename the headers of the columns related 
+to the managers and the columns related to the employees to differentiate between them by using aliase */
