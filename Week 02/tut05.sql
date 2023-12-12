@@ -175,8 +175,101 @@ FROM departments D JOIN employees E
 ON D.department_id = E.department_id
 WHERE E.last_name LIKE 'P%' OR E.last_name LIKE 'S%';
 
+
 -- Tutorial 05 Question 05
 
 /* Write a query that displays a list of IDs, first names and surnames of the employees who manage other employees
 with the IDs, first names and surnames of the employees that they manage. Rename the headers of the columns related 
 to the managers and the columns related to the employees to differentiate between them by using aliase */
+SELECT M.employee_id AS Manager_idNo, M.first_name AS Manager_fname, M.last_name AS Manager_lname,
+E.first_name AS Employee_fname, E.last_name AS Employee_lname
+FROM employees E JOIN employees M 
+ON E.manager_id = M.employee_id;
+
+
+-- Tutorial 05 Question 06
+
+/* Modify the previous query to output only one column displaying the details of the managers and their 
+respective employees. For every employee, this column should display something like “Jenny Bloggs (ID: 1234) 
+manages John Smith (ID: 5678)”. Give it an appropriate header like “Management Report” */
+SELECT CONCAT(M.first_name, " ", M.last_name, " ( ID: ", M.employee_id, ")", " manages ", E.first_name, " ",
+E.last_name, " (ID: ", E.employee_id, ")") AS Management_Report
+FROM employees E JOIN employees M 
+ON E.manager_id = M.employee_id;
+
+
+-- Tutorial 05 Question 07
+
+/* Write a query that displays a list of employee surnames, salaries and job roles for those employees who work 
+in the IT department */
+SELECT E.last_name, E.salary, J.job_title
+FROM employees E JOIN jobs J ON E.job_id = J.job_id
+JOIN departments D ON E.department_id = D.department_id
+WHERE D.department_name = 'IT';
+
+
+/* Tutorial 05 Question 08
+
+Write a query that displays a list of employee surnames, first names, salaries, job roles with the names of 
+the departments where they work and the cities and countries where these departments are located */
+SELECT E.last_name, E.first_name, E.salary, J.job_title, D.department_name, L.city, L.country
+FROM employees E JOIN jobs J ON E.job_id = J.job_id
+JOIN departments D ON E.department_id = D.department_id
+JOIN locations L ON D.location_id = L.location_id;
+
+
+/* Tutorial 05 Question 09
+
+Write a query that displays a list of employee surnames, salaries, job roles, hire dates and their department 
+names and cities for those employees who work in London, who were hired before the 25th April 2019 and whose salary 
+is not between 40,000 and 50,000 */
+SELECT E.last_name, E.salary, J.job_title, E.hire_date, D.department_name, L.city
+FROM employees E JOIN jobs J ON E.job_id = J.job_id
+JOIN departments D ON E.department_id = D.department_id
+JOIN locations L ON D.location_id = L.location_id
+WHERE (L.city LIKE 'London') AND (E.hire_date < '2019-04-25') AND (E.salary NOT BETWEEN 40000.00 AND 50000.00);
+
+
+/*Tutorial 05 Question 10
+
+Write a query that displays a list of employee surnames, salaries, job roles and department names along with 
+the surnames, salaries, job roles and department names of those staff who manage them.*/
+SELECT E.last_name AS Employee_lname, E.salary AS Employee_salary, J.job_title AS Employee_Job, D.department_name AS Employee_dep,
+M.last_name AS Manager_lname, M.salary AS Manager_salary, MJ.job_title AS Manager_job, MD.department_name AS Manager_dep
+FROM employees E JOIN jobs J ON E.job_id = J.job_id
+JOIN departments D ON E.department_id = D.department_id
+JOIN employees M ON E.employee_id = M.manager_id
+JOIN jobs MJ ON M.job_id = MJ.job_id
+JOIN departments MD ON M.department_id = MD.department_id;
+
+
+
+/* Tutorial 05 Question 11
+
+Write a query that displays a list of departments alongside the full names, hire dates and salaries of the employees
+who work in those departments. To this list add the names of the departments who do not have any employees. */
+SELECT D.department_name, CONCAT(E.first_name," ", E.last_name)AS full_name, E.hire_date, E.salary
+FROM departments D LEFT OUTER JOIN employees E
+ON D.department_id = E.department_id;
+
+
+/* Tutorial 05 Question 12
+
+Write a query that displays a list of departments alongside the full names, hire dates and salaries of the 
+employees who work in those departments. To this list add the names of the employees who do not work in a department. */
+SELECT D.department_name, CONCAT(E.first_name, ' ', E.last_name) AS full_name, E.hire_date, E.salary
+FROM departments D RIGHT OUTER JOIN employees E
+ON E.department_id = D.department_id;
+
+
+/* Tutorial 05 Question 13
+
+Write a query that displays the surnames and salaries of employees who have jobs and their job titles. To this list, 
+add the employees who do not have jobs and the jobs for which there are no employees who have these jobs */
+SELECT E.last_name AS surname, E.salary, J.job_title
+FROM employees E RIGHT OUTER JOIN jobs J
+ON E.job_id = J.job_id
+UNION
+SELECT E.last_name AS surname, E.salary, J.job_title
+FROM employees E LEFT OUTER JOIN jobs J
+ON E.job_id = J.job_id;
