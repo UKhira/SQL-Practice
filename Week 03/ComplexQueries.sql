@@ -28,7 +28,7 @@ CREATE TABLE Emp(
     mgrId INTEGER,
     CONSTRAINT e_eid_pk PRIMARY KEY (empId),
     CONSTRAINT e_dno_fk FOREIGN KEY (deptNo) 
-    REFERENCESDept(deptNo),
+    REFERENCES Dept(deptNo),
     CONSTRAINT e_mid_fk FOREIGN KEY (mgrId) 
     REFERENCES Emp(empId)
 );
