@@ -223,3 +223,66 @@ AND mgrId =
     FROM Emp
     WHERE empId = 108);
 
+-- Using GROUP functions with single-row subqueries
+
+-- Find out who earns the same as the lowest salary in department 10.
+SELECT lName, fName, deptNo, salary
+FROM Emp
+WHERE salary = 
+    (SELECT MIN(salary)
+    FROM Emp
+    WHERE deptNo = 10);
+
+-- Find out who earns the same & more than the average salary in the firm.
+SELECT lName, fName, deptNo, salary
+FROM Emp
+WHERE salary >= 
+    (SELECT AVG(salary)
+    FROM Emp);
+
+-- Grouping data and restricting with a single-row subquery
+SELECT deptNo, MIN(salary)
+FROM Emp
+GROUP BY deptNo
+HAVING MIN(salary) > 
+    (SELECT MIN(salary)
+    FROM Emp
+    WHERE deptNo = 10);
+
+-- Multiple-row comparison operators
+
+-- Using < ANY in multiple-row subquery
+SELECT lName, fName, position, salary
+FROM Emp
+WHERE salary < ANY 
+    (SELECT salary
+    FROM Emp
+    WHERE position LIKE '%Database%')
+AND position NOT LIKE '%Database%';
+
+-- Using < ALL in multiple-row subquery
+SELECT lName, fName, position, salary
+FROM Emp
+WHERE salary < ALL
+    (SELECT salary
+    FROM Emp
+    WHERE position LIKE '%Database%')
+AND position NOT LIKE '%Database%';
+
+-- Using > ANY in multiple-row subquery
+SELECT lName, fName, position, salary
+FROM Emp
+WHERE salary > ANY 
+    (SELECT salary
+    FROM Emp
+    WHERE deptNo = 10)
+AND deptNo <> 10;
+
+-- Using > ALL in multiple-row subquery
+SELECT lName, fName, position, salary
+FROM Emp
+WHERE salary > ALL
+    (SELECT salary
+    FROM Emp
+    WHERE deptNo = 10)
+AND deptNo <> 10;
