@@ -91,3 +91,135 @@ VALUES
 -- Group functions with numeric data
 
 -- Use MIN, MAX, SUM, AVG.
+SELECT MIN(salary), MAX(salary), SUM(salary), AVG(salary)
+FROM Emp;
+
+-- With rounding.
+SELECT MIN(salary), MAX(salary), SUM(salary), ROUND(AVG(salary),2)
+FROM Emp;
+
+
+-- Group functions with numeric data (and additional condition)
+/* Group functions MIN, MAX, SUM and AVG return one value.oThe attribute position cannot be retrieved as it 
+contains multiple values */
+SELECT MIN(salary), MAX(salary), SUM(salary), ROUND(AVG(salary),2)
+FROM Emp
+WHERE position LIKE '%Developer%';
+
+-- Group functions with strings of characters
+
+/* MIN retrieves the string that is positioned the earliest alphabetically.
+MAX retrieves the string that is positioned the furthest alphabetically.
+COUNT retrieves the number of strings in the column */
+SELECT MIN(lName), MAX(lName), COUNT(lName)
+FROM Emp;
+
+-- Group functions with dates
+
+/* MIN retrieves the earliest date.
+MAX retrieves the furthest date.
+COUNT retrieves the number of dates in the column. */
+SELECT MIN(hireDate), MAX(hireDate), COUNT(hireDate)
+FROM Emp;
+
+
+-- COUNT group function – specify column or not
+
+-- Without specifying a column: use *.
+SELECT COUNT(*)
+FROM Emp
+WHERE deptNo = 10;
+
+/* With a specific column:
+Using the PK is a good idea as it is a unique identifier */
+SELECT COUNT(empId)
+FROM Emp
+WHERE deptNo = 10;
+
+-- COUNT group function – handling repeated values
+
+-- It counts repeated values as separate values.
+SELECT COUNT(deptNo)
+FROM Emp;
+
+-- Use DISTINCT to retrieve the total number of different values.
+SELECT COUNT(DISTINCT deptNo)
+FROM Emp;
+
+-- Group functions and NULL values
+
+-- Group functions ignore null values in column.
+SELECT AVG(commPct)
+FROM Emp;
+
+/* The IFNULL function (in MySQL) replaces null values with 0s and force the group function to include null values in 
+the aggregation. */
+SELECT AVG(IFNULL(commPct,0))
+FROM Emp;
+
+/* Creating groups of data */
+SELECT deptNo, MIN(salary), MAX(salary), AVG(salary), SUM(salary), COUNT(salary)
+FROM Emp
+GROUP BY deptNo;
+
+-- GROUP BY clause – include grouped column or not
+
+-- The grouped column can be in the SELECT list.
+SELECT deptNo, AVG(salary), SUM(salary)
+FROM Emp
+GROUP BY deptNo;
+
+-- The grouped column does not have to be in the SELECT list.
+SELECT AVG(salary), SUM(salary)
+FROM Emp 
+GROUP BY deptNo;
+
+-- GROUP BY clause – with multiple columns
+SELECT deptNo, position, AVG(salary)
+FROM Emp
+GROUP BY deptNo, position;
+
+-- Restricting group results
+
+-- HAVING clause
+SELECT deptNo, AVG(salary)
+FROM Emp
+GROUP BY deptNo
+HAVING AVG(salary) > 4500;
+
+-- HAVING clause and WHERE clause
+SELECT deptNo, SUM(salary) AS "Dept Payroll" 
+FROM Emp
+WHERE deptNo IS NOT NULL
+GROUP BY deptNo
+HAVING SUM(salary) > 4500
+ORDER BY SUM(salary); 
+
+-- Using subqueries
+SELECT lName, fName, salary
+FROM Emp
+WHERE salary >
+    (SELECT salary
+    FROM Emp
+    WHERE lName = 'Pop');
+
+-- Single-row subqueries
+SELECT lName, fName,deptNo
+FROM Emp
+WHERE deptNo <> 
+    (SELECT deptNo
+    FROM Emp
+    WHERE empId = 103);
+
+-- Single-row subqueries 
+SELECT lName,fName, position,mgrId
+FROM Emp
+WHERE position = 
+    (SELECT position
+    FROM Emp
+    WHERE empId = 104)
+AND mgrId = 
+    (SELECT mgrId
+    FROM Emp
+    WHERE empId = 108);
+
