@@ -138,4 +138,107 @@ FROM employees
 WHERE employee_id IN (1022, 1023, 1024, 1025);
 
 /* b) Modify the previous query to include these staff who may not have a salary in your average calculation. 
-Treat theabsence of salary like a 0 value */
+Treat the absence of salary like a 0 value */
+SELECT AVG(IFNULL(salary,2))
+FROM employees
+WHERE employee_id IN (1022, 1023, 1024, 1025);
+
+/* Tutorial 06 Question 02
+Write a query that displays the lowest, highest and average salary for the staff who have a job id that is either 907,908, or 909 
+and who were hired in 2017. Label the columns “Minimum”, “Maximum” and “Average*/
+SELECT MIN(salary) AS Minimum, MAX(salary) AS Maximum, ROUND(AVG(salary),2) AS Average
+FROM employees
+WHERE job_id IN (907, 908, 909) AND hire_date LIKE '2017%';
+
+/* Tutorial 06 Question 03
+Write a query that displays the manager number and, FOR EACH manager, the salary of the lowest-paid employee they manage. 
+Exclude anyone whose manager is not known. Exclude any groups where the minimum salary is 47000 or less*/
+SELECT manager_id, MIN(salary)
+FROM employees
+GROUP BY manager_id
+HAVING manager_id IS NOT NULL AND  MIN(salary) > 47000;
+
+/* Tutorial 06 Question 04
+Write a query that displays department IDs and FOR EACH department, the lowest, highest and average salary but only for these 
+departments for which both the maximum and the average salary is greater than 50000. Label the columns “Dept Id”, “Minimum”, 
+“Maximum” and “Average”. Also exclude staff not allocated to work in a department. */
+SELECT department_id AS 'Dept Id', MIN(salary) AS Minimum,  MAX(salary) AS Maximum, ROUND(AVG(salary),2) AS Average
+FROM employees
+GROUP BY department_id
+HAVING (Maximum > 50000 AND Average > 50000) AND department_id IS NOT NULL;
+
+/* Tutorial 06 Question 05
+Write a query that displays a list of department IDs and department names and FOR EACH department the 
+average salary in that department. Also include the details of those departments who do not have any employees */
+SELECT E.department_id, D.department_name, ROUND(AVG(E.salary),2)
+FROM departments D RIGHT JOIN employees E
+ON D.department_id = E.department_id
+GROUP BY E.department_id;
+
+/* Tutorial 06 Question 06
+Write a query that displays a list of job ids and job titles with the number of staff (i.e. a count of the numbers of employees) 
+FOR EACH job. Label the columns “Job Id”, “Job Title” and “Staff Count”. Only include the job titles that are not related to 
+management. In the end, only include the jobs that have at least 2 employees for each job and order the output in alphabetic order 
+of job titles */
+SELECT J.job_id AS 'Job Id', J.job_title AS 'Job Title', COUNT(E.employee_id) AS 'Staff Count'
+FROM jobs J JOIN employees E 
+ON J.job_id = E.job_id
+GROUP BY J.job_id
+HAVING J.job_title NOT LIKE "%Manag%"
+AND COUNT(J.job_id) >= 2
+ORDER BY job_title;
+
+/* TUTORIAL 07: SUBQUERIES
+
+Tutorial 07 Question 01
+Write a query that displays the department numbers, last names and hire dates of all the staff who works in the same department as 
+Matos. Exclude Matos. Rank in ascending order of department number. (Hint: check the number of staff called Matos in your dataset) */
+SELECT department_id, last_name, hire_date
+FROM employees
+WHERE department_id = ANY
+	(SELECT department_id
+	FROM employees
+	WHERE last_name LIKE 'Matos')
+HAVING last_name NOT LIKE 'Matos'
+ORDER BY department_id;
+
+
+/*Tutorial 07 Question 02
+
+a) Write a query that displays the last names and salaries of all staff who earn strictly more than the highest salary in department 
+40. (Hint: think of 2 different ways of writing this query) */
+SELECT last_name, salary
+FROM employees
+WHERE salary >
+	(SELECT MAX(salary)
+	FROM employees
+	WHERE department_id = 40);
+
+SELECT E.last_name, E.salary
+FROM employees E
+JOIN 
+	(SELECT MAX(salary) AS msal
+	FROM employees
+	WHERE department_id = 40) M
+ON E.salary > M.msal;
+
+/* b) Write a query that displays the last names and salaries of all staff who earn strictly more than the lowest salary in
+department 10. (Hint: think of 2 different ways of writing this query) */
+SELECT last_name, salary
+FROM employees
+WHERE salary >
+	(SELECT MIN(salary)
+	FROM employees
+	WHERE department_id = 10);
+
+SELECT E.last_name, E.salary
+FROM employees e
+JOIN 
+	(SELECT MIN(salary) as minsal
+	FROM employees
+	WHERE department_id = 10) M
+ON E.salary > M.minsal;
+
+/* Tutorial 07 Question 03
+Write a query that displays the last names, salary, hire dates and department numbers of all employees whosedepartment 
+location ID is 100. (Hint: think of 2 different ways of writing this query, one using a join, the other oneusing a subquery).*/
