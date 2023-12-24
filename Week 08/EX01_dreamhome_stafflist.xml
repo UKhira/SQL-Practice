@@ -1,0 +1,23 @@
+<?xml version = "1.0" encoding = "utf-8" standalone = "yes"?>
+<?xml-stylesheet type = "text/xsl" href = "dreamhome_stylesheet.xsl"?>
+
+<STAFFLIST>     <!-- STAFFLIST root elmt (1st element) -->
+    <STAFF branchNo = "B005">     <!-- STAFF sub element (child element), branch attribute -->
+        <STAFFNO>SL21</STAFFNO>     <!-- STAFFNO sub element of STAFF -->
+        <NAME>      <!-- NAME sub element of STAFF -->
+            <FNAME>JOHN</FNAME><LNAME>White</LNAME><!-- Elements must be properly nested -->
+        </NAME>
+        <POSITION>Manager</POSITION>    <!-- Elements are case sensitive -->
+        <DOB>1-Oct-45</DOB>
+        <SALARY>30000</SALARY>
+    </STAFF>
+    <STAFF branchNo = "B003">
+        <STAFFNO>SG37</STAFFNO>
+        <NAME>
+            <FNAME>Ann</FNAME><LNAME>Beech</LNAME>
+        </NAME>
+        <POSITION>Assistant</POSITION>
+        <DOB>12-Mar-63</DOB>
+        <SALARY>12000</SALARY>
+    </STAFF>
+</STAFFLIST>

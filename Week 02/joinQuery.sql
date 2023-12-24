@@ -133,7 +133,7 @@ AND (D.dName LIKE '%Database%'
 OR E.salary < 4700);
 
 -- Self-Join statement
-SELECT M.empId AS mangerId, M.lName AS managerName, M.fName AS managerFName, E.empId, E.lName, E.fName
+SELECT M.empId AS mangerId, M.lName AS managerName, M.fName AS managerFName, E.empId AS employeeId, E.lName AS employeelName, E.fName AS employeefName
 FROM Emp M JOIN Emp E
 ON M.empId = E.mgrId;
 

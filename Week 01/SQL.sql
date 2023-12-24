@@ -104,7 +104,7 @@ FROM Emp;
 --  Concatanation
 
 -- Concatenate columns: use CONCAT function.
-SELECT CONCAT (fname,lname) As "Full Name"
+SELECT CONCAT (fname, lname) As "Full Name"
 FROM Emp;
 
 -- Concatenate and introduce a blank space.

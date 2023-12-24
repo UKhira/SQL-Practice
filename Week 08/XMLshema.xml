@@ -1,0 +1,5 @@
+<root>
+    <child attribute = "value">
+        <subchild>Text</subchild>
+    </child>
+</root>

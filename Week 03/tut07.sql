@@ -139,7 +139,7 @@ WHERE employee_id IN (1022, 1023, 1024, 1025);
 
 /* b) Modify the previous query to include these staff who may not have a salary in your average calculation. 
 Treat the absence of salary like a 0 value */
-SELECT AVG(IFNULL(salary,2))
+SELECT AVG(IFNULL(salary,0))
 FROM employees
 WHERE employee_id IN (1022, 1023, 1024, 1025);
 
@@ -240,5 +240,59 @@ JOIN
 ON E.salary > M.minsal;
 
 /* Tutorial 07 Question 03
-Write a query that displays the last names, salary, hire dates and department numbers of all employees whosedepartment 
-location ID is 100. (Hint: think of 2 different ways of writing this query, one using a join, the other oneusing a subquery).*/
+Write a query that displays the last names, salary, hire dates and department numbers of all employees whose
+department location ID is 100. (Hint: think of 2 different ways of writing this query, one using a join, the other 
+one using a subquery).*/
+SELECT E.last_name, E.salary, E.department_id 
+FROM employees E JOIN departments D
+ON E.department_id = D.department_id
+WHERE D.location_id = 100;
+
+SELECT last_name, salary,department_id
+FROM employees
+WHERE department_id = ANY
+	(SELECT department_id
+	FROM departments
+	WHERE location_id = 100);
+
+/*Tutorial 07 Question 04
+Write a query that displays the last names and salaries of all staff who are managed by an employee whose first 
+name start with the letter ‘J’. (Hint: think of 2 ways of writing this query, one using a join, the other one using 
+a subquery)*/
+SELECT E.last_name, E.salary
+FROM employees E JOIN employees M
+ON E.manager_id = M.employee_id
+WHERE M.first_name LIKE 'J%';
+
+SELECT last_name, salary
+FROM employees
+WHERE manager_id = 
+	(SELECT employee_id
+	FROM employees
+	WHERE first_name LIKE 'J%');
+
+/*Tutorial 07 Question 05
+Write a query that displays the last names and salaries of all staff who work in the same department as someone 
+who was hired from the 1st of January 2017 onwards, and, at the same time, who earn more than the average salary 
+of those employees not allocated to a department.*/
+SELECT last_name, salary
+FROM employees
+WHERE department_id IN
+	(SELECT department_id
+	FROM employees
+	WHERE hire_date >= '2017-01-01')
+OR salary > 
+	(SELECT AVG(salary)
+	FROM employees
+	WHERE department_id IS NULL);
+
+/*Tutorial 07 Question 06
+Write a query that displays a list of department IDs and department names for those departments that do not have
+any employees with a job code 904*/
+SELECT department_id, department_name
+FROM departments
+WHERE department_id NOT IN
+	(SELECT department_id 
+	FROM employees
+	WHERE job_id = 904
+	AND department_id IS NOT NULL)
